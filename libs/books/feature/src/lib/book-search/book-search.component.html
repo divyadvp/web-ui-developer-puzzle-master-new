@@ -21,7 +21,7 @@
       </div>
       <div class="book--content">
         <div class="book--content--cover">
-          <img src="{{ b.coverUrl }}" />
+          <img src="{{ b.coverUrl }}" [alt]="b.title" />
         </div>
         <div class="book--content--info">
           <div><strong>Author:</strong> {{ b.authors.join(',') }}</div>
@@ -36,8 +36,10 @@
               color="primary"
               (click)="addBookToReadingList(b)"
               [disabled]="b.isAdded"
+              data-testing="want-to-read"
+              aria-label="want-to-read"
             >
-              Want to Read
+            {{b?.finished? 'Finished': 'Want to Read'}}
             </button>
           </div>
         </div>
@@ -48,8 +50,9 @@
 <ng-template #empty>
   <div class="empty">
     <p>
-      Try searching for a topic, for example "<a (click)="searchExample()"
-      tabindex="0"
+      Try searching for a topic, for example "<a
+        (click)="searchExample()"
+        tabindex="0"
         >JavaScript</a
       >".
     </p>
