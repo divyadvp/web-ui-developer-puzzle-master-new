@@ -1,7 +1,7 @@
 import { HttpService, Injectable } from '@nestjs/common';
 import { Book } from '@tmo/shared/models';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 
 @Injectable()
 export class BooksService {
@@ -15,8 +15,8 @@ export class BooksService {
     return this.http
       .get(`https://www.googleapis.com/books/v1/volumes?q=${term}`)
       .pipe(
-        map(resp => {
-          return resp.data.items.map(item => {
+        map((resp) => {
+          return resp.data.items.map((item) => {
             return {
               id: item.id,
               title: item.volumeInfo?.title,
@@ -29,7 +29,8 @@ export class BooksService {
               coverUrl: item.volumeInfo?.imageLinks?.thumbnail
             };
           });
-        })
+        }),
+        catchError((err) => of(`Something went wrong: ${err}`))
       );
   }
 }
